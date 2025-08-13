@@ -4,14 +4,12 @@ const doctorSchema = new mongoose.Schema(
 	{
 		specialty: {
 			type: String,
-			required: true,
 		},
 		bio: {
 			type: String,
 		},
 		availableDays: {
 			type: String,
-			required: true,
 			enum: [
 				"Monday",
 				"Tuesday",
@@ -24,11 +22,9 @@ const doctorSchema = new mongoose.Schema(
 		},
 		availableAt: {
 			type: String,
-			required: true,
 		},
 		availableTill: {
 			type: String,
-			required: true,
 		},
 		userId: {
 			type: mongoose.Schema.Types.ObjectId,

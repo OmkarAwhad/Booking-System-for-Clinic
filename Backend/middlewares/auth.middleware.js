@@ -16,9 +16,9 @@ exports.auth = async (req, res, next) => {
 		}
 
 		try {
-			const decode = await jwt.verify(token, process.env.JWT_SECRET);
+			const payload = await jwt.verify(token, process.env.JWT_SECRET);
 
-			req.user = decode;
+			req.user = payload;
 		} catch (error) {
 			return res.json(new ApiError(401, "Invalid token"));
 		}
@@ -41,6 +41,7 @@ exports.auth = async (req, res, next) => {
 exports.isPatient = async (req, res, next) => {
 	try {
 		const role = req.user.role;
+		// const {role} = req.user;
 		if (role !== "Patient") {
 			return res.json(
 				new ApiError(
@@ -91,3 +92,22 @@ exports.isAdmin = async (req, res, next) => {
 		return res.json(new ApiError(500, "Error in Admin auth"));
 	}
 };
+
+exports.isReceptionist = async (req, res, next) => {
+	try {
+		const role = req.user.role;
+		if (role !== "Receptionist") {
+			return res.json(
+				new ApiError(
+					401,
+					"This is a protected route for Receptionists only"
+				)
+			);
+		}
+		next();
+	} catch (error) {
+		console.log("Error in Receptionist auth ", error.message);
+		return res.json(new ApiError(500, "Error in Receptionist auth"));
+	}
+};
+

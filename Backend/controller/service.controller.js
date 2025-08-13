@@ -6,8 +6,10 @@ module.exports.createService = async (req, res) => {
 	try {
 		const { name, description, duration, fee } = req.body;
 
-		if (!name || !description) {
-			return res.json(new ApiError(400, "Name and description are required"));
+		if (!name || !description || !duration || !fee) {
+			return res.json(
+				new ApiError(400, "Name and description are required")
+			);
 		}
 
 		const existingService = await Service.findOne({ name });
@@ -15,7 +17,12 @@ module.exports.createService = async (req, res) => {
 			return res.json(new ApiError(400, "Service already exists"));
 		}
 
-		const service = await Service.create({ name, description, duration, fee });
+		const service = await Service.create({
+			name,
+			description,
+			duration,
+			fee,
+		});
 		return res.json(
 			new ApiResponse(200, service, "Service created successfully")
 		);
