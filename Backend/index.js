@@ -12,9 +12,11 @@ app.use(express.urlencoded({ extended: true }));
 
 const authRoutes = require("./routes/auth.routes");
 const serviceRoutes = require("./routes/service.routes");
+const doctorRoutes = require("./routes/doctor.routes");
 
 app.use("/api/v1/service", serviceRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/doctor", doctorRoutes);
 
 app.get("/", (req, res) => {
 	res.send("Backend Working");
