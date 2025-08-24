@@ -96,6 +96,7 @@ exports.isAdmin = async (req, res, next) => {
 exports.isReceptionist = async (req, res, next) => {
 	try {
 		const role = req.user.role;
+		// console.log("Role : ",req.user.role)
 		if (role !== "Receptionist") {
 			return res.json(
 				new ApiError(
@@ -104,6 +105,8 @@ exports.isReceptionist = async (req, res, next) => {
 				)
 			);
 		}
+
+		
 		next();
 	} catch (error) {
 		console.log("Error in Receptionist auth ", error.message);

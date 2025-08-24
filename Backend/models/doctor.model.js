@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 
 const doctorSchema = new mongoose.Schema(
 	{
-		specialty: {
+		speciality: {
 			type: String,
 		},
 		bio: {
 			type: String,
 		},
 		availableDays: {
-			type: String,
+			type: [String],
 			enum: [
 				"Monday",
 				"Tuesday",
