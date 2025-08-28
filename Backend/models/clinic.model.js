@@ -9,6 +9,7 @@ const clinicSchema = new mongoose.Schema(
 		address: {
 			type: String,
 			required: true,
+			unique: true,
 		},
 		phone: {
 			type: String,
