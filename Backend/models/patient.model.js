@@ -6,25 +6,30 @@ const patientSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
 		},
-		address: {
-			type: String,
-		},
 		doctorId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Doctor",
 		},
+		address: {
+			type: String,
+		},
 		visitDate: {
 			type: Date,
+			default: Date.now,
 		},
 		symptoms: {
-			type: String,
+			type: [String],
 		},
 		diagnosis: {
-			type: String,
+			type: [String],
 		},
-		medicines: {
-			type: String,
-		},
+		medicines: [
+			{
+				name: String,
+				dosage: String,
+				frequency: String,
+			},
+		],
 		notes: {
 			type: String,
 		},

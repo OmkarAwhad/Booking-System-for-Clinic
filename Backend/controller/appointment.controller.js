@@ -282,3 +282,37 @@ module.exports.getTodaysAppointments = async (req, res) => {
 		);
 	}
 };
+
+module.exports.deleteAppointment = async (req, res) => {
+	try {
+		const userId = req.user.id;
+		const { appointmentId } = req.body;
+
+		if (!appointmentId) {
+			return res.json(new ApiError(400, "Appointment ID is required"));
+		}
+
+		const appointmentDetails = await Appointment.findById(appointmentId);
+		if (!appointmentDetails) {
+			return res.json(new ApiError(404, "Appointment not found"));
+		}
+
+		if (appointmentDetails.patientId.toString() !== userId) {
+			return res.json(
+				new ApiError(
+					403,
+					"You can only delete your own appointments"
+				)
+			);
+		}
+
+		await Appointment.findByIdAndDelete(appointmentId);
+
+		return res.json(
+			new ApiResponse(200, null, "Appointment deleted successfully")
+		);
+	} catch (error) {
+		console.log("Error in deleting appointment", error);
+		return res.json(new ApiError(500, "Error in deleting appointment"));
+	}
+};

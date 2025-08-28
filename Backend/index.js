@@ -15,9 +15,11 @@ const serviceRoutes = require("./routes/service.routes");
 const doctorRoutes = require("./routes/doctor.routes");
 const receptionistRoutes = require("./routes/receptionist.routes");
 const appointmentRoutes = require("./routes/appointment.routes");
+const patientRoutes = require("./routes/patient.routes");
 
 app.use("/api/v1/service", serviceRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/patient", patientRoutes);
 app.use("/api/v1/appointment", appointmentRoutes);
 app.use("/api/v1/receptionist", receptionistRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
