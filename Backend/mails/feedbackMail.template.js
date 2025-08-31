@@ -150,7 +150,7 @@ exports.feedbackEmail = (patientName) => {
          <tr><td class="spacer"></td></tr>
          <tr>
             <td class="cta-wrap">
-               <a class="cta" href="#" target="_blank" rel="noopener noreferrer">Share Your Feedback</a>
+               <a class="cta" href="http://localhost:3000/api/v1/feedback/createFeedback" target="_blank" rel="noopener noreferrer">Share Your Feedback</a>
             </td>
          </tr>
          <tr>
