@@ -4,6 +4,10 @@ const Service = require("../models/service.model");
 const User = require("../models/user.model");
 const { ApiResponse } = require("../utils/ApiResponse.utils");
 const { ApiError } = require("../utils/ApiError.utils");
+const { mailSender } = require("../utils/mailSender.utils");
+const { confirmationMail, confirmationEmail } = require("../mails/confirmationMail.template");
+const { reminderMail } = require("../mails/reminderMail.template");
+const node = require("node-cron");
 
 module.exports.createAppointment = async (req, res) => {
 	try {
@@ -70,6 +74,16 @@ module.exports.createAppointment = async (req, res) => {
 			attended: false,
 			status: "booked",
 		});
+
+		try {
+			await mailSender(
+				userDetails.email,
+				"Appointment booked successfully",
+				confirmationEmail(userDetails.name, date, appointmentTime)
+			);
+		} catch (error) {
+			console.error("Error sending confirmation email:", error);
+		}
 
 		return res.json(
 			new ApiResponse(
@@ -283,7 +297,7 @@ module.exports.getTodaysAppointments = async (req, res) => {
 	}
 };
 
-module.exports.deleteAppointment = async (req, res) => {
+module.exports.cancelAppointment = async (req, res) => {
 	try {
 		const userId = req.user.id;
 		const { appointmentId } = req.body;
@@ -306,13 +320,21 @@ module.exports.deleteAppointment = async (req, res) => {
 			);
 		}
 
-		await Appointment.findByIdAndDelete(appointmentId);
+		const updatedAppointment = await Appointment.findByIdAndUpdate(
+			appointmentId,
+			{ $set: { status: "cancelled" } },
+			{ new: true, runValidators: true }
+		).populate("patientId", "name email");
 
 		return res.json(
-			new ApiResponse(200, null, "Appointment deleted successfully")
+			new ApiResponse(
+				200,
+				updatedAppointment,
+				"Appointment cancelled successfully"
+			)
 		);
 	} catch (error) {
-		console.log("Error in deleting appointment", error);
-		return res.json(new ApiError(500, "Error in deleting appointment"));
+		console.log("Error in cancelling appointment", error);
+		return res.json(new ApiError(500, "Error in cancelling appointment"));
 	}
 };

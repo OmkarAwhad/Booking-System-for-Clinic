@@ -3,6 +3,9 @@ const Doctor = require("../models/doctor.model");
 const { ApiResponse } = require("../utils/ApiResponse.utils");
 const { ApiError } = require("../utils/ApiError.utils");
 const User = require("../models/user.model");
+const Appointment = require("../models/appointment.model");
+const { feedbackEmail } = require("../mails/feedbackMail.template");
+const { mailSender } = require("../utils/mailSender.utils");
 
 const patientPopulate = [
 	{ path: "userId", select: "name email phone age gender role" },
@@ -26,46 +29,117 @@ module.exports.createRecord = async (req, res) => {
 			doctorId,
 		} = req.body;
 
+		// Validate required fields
+		if (!userId || !doctorId || !visitDate) {
+			return res.json(
+				new ApiError(
+					400,
+					"userId, doctorId, and visitDate are required"
+				)
+			);
+		}
+
+		// Check user exists
 		const userDetails = await User.findById(userId);
 		if (!userDetails) {
 			return res.json(new ApiError(401, "User doesn't exist"));
 		}
 
+		// Restrict patients from creating records
 		const role = req.user.role;
 		if (role === "Patient") {
 			return res.json(
 				new ApiError(
 					401,
-					"Patient are not allowed to access this route"
+					"Patients are not allowed to access this route"
 				)
 			);
 		}
 
+		// Check doctor exists
 		const doctorDetails = await Doctor.findById(doctorId);
 		if (!doctorDetails) {
 			return res.json(new ApiError(401, "Doctor not found"));
 		}
 
+		// Create patient record
 		const patientDetails = await Patient.create({
 			userId: userDetails._id,
 			doctorId: doctorDetails._id,
-			address: address,
-			visitDate: visitDate,
-			symptoms: symptoms,
-			diagnosis: diagnosis,
-			medicines: medicines,
-			notes: notes,
+			address,
+			visitDate: new Date(visitDate),
+			symptoms,
+			diagnosis,
+			medicines,
+			notes,
 		});
+
+		// Update corresponding appointment to completed
+		const appointmentDate = new Date(visitDate);
+		const startOfDay = new Date(appointmentDate.setHours(0, 0, 0, 0));
+		const endOfDay = new Date(appointmentDate.setHours(23, 59, 59, 999));
+
+		const updatedAppointment = await Appointment.findOneAndUpdate(
+			{
+				patientId: userDetails._id,
+				doctorId: doctorDetails._id,
+				date: { $gte: startOfDay, $lte: endOfDay },
+				status: "booked", // Only update if still booked
+			},
+			{
+				$set: {
+					status: "completed",
+					attended: true,
+					updatedAt: new Date(),
+				},
+			},
+			{
+				new: true,
+				runValidators: true,
+			}
+		).populate("patientId", "name email");
+
+      console.log(updatedAppointment)
+
+		// Send feedback email if appointment was updated
+		if (
+			updatedAppointment &&
+			updatedAppointment.patientId &&
+			updatedAppointment.patientId.email
+		) {
+			try {
+				await mailSender(
+					updatedAppointment.patientId.email,
+					"Feedback Request",
+					feedbackEmail(updatedAppointment.patientId.name)
+				);
+				console.log(
+					`Feedback email sent to ${updatedAppointment.patientId.email}`
+				);
+			} catch (emailError) {
+				console.error("Error sending feedback email:", emailError);
+				// Continue despite email failure to avoid blocking response
+			}
+		} else if (!updatedAppointment) {
+			console.log(
+				`No matching booked appointment found for patient ${userId} on ${visitDate}`
+			);
+		}
+
+		// Populate patient record for response
+		const populatedRecord = await patientDetails.populate(
+			patientPopulate
+		);
 
 		return res.json(
 			new ApiResponse(
 				201,
-				patientDetails,
-				"Patient record created successfully"
+				populatedRecord,
+				"Patient record created and appointment updated successfully"
 			)
 		);
 	} catch (error) {
-		console.log("Error in creating patient record", error);
+		console.error("Error in creating patient record:", error);
 		return res.json(
 			new ApiError(500, "Error in creating patient record")
 		);
@@ -236,11 +310,7 @@ module.exports.deleteRecord = async (req, res) => {
 		}
 
 		return res.json(
-			new ApiResponse(
-				200,
-				{},
-				"Patient record deleted successfully"
-			)
+			new ApiResponse(200, {}, "Patient record deleted successfully")
 		);
 	} catch (err) {
 		console.error("Error in deleting patient record", err);

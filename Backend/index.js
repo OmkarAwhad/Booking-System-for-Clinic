@@ -26,6 +26,8 @@ app.use("/api/v1/appointment", appointmentRoutes);
 app.use("/api/v1/receptionist", receptionistRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
 
+require('./config/reminderJob') // cron job for 8AM Reminder
+
 app.get("/", (req, res) => {
 	res.send("Backend Working");
 });
