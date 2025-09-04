@@ -1,11 +1,19 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 require("./config/mongoose").connect();
 
 app.use(cookieParser());
+
+app.use(
+	cors({
+		origin: "http://localhost:5173",
+		credentials: true,
+	})
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +36,7 @@ app.use("/api/v1/appointment", appointmentRoutes);
 app.use("/api/v1/receptionist", receptionistRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
 
-require('./config/reminderJob') // cron job for 8AM Reminder
+require("./config/reminderJob"); // cron job for 8AM Reminder
 
 app.get("/", (req, res) => {
 	res.send("Backend Working");
@@ -37,4 +45,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, (req, res) => {
 	console.log(`Backend running at port ${PORT}`);
 });
-

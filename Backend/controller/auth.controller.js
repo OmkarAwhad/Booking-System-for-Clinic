@@ -162,10 +162,18 @@ module.exports.verifyOTP = async (req, res) => {
 
 module.exports.changePassword = async (req, res) => {
 	try {
-		const { token, newPassword } = req.body;
+		const { token, newPassword, confirmPassword } = req.body;
 
-		if (!newPassword) {
-			return res.json(new ApiError(400, "New password is required"));
+		if (!newPassword || !confirmPassword) {
+			return res.json(
+				new ApiError(400, "Both passwords are required")
+			);
+		}
+
+		if (newPassword !== confirmPassword) {
+			return res.json(
+				new ApiError(401, "Both passwords should be equal")
+			);
 		}
 
 		let decoded;

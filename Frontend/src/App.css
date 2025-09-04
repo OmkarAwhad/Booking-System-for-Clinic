@@ -1,42 +1,197 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+	--light-teal: #76d7b8;
+	--medium-teal: #34b38a;
+	--main-teal: #4ecca3;
+	--medium-gray: #505762;
+	--dark-gray: #393e46;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Light Teal */
+.bg-light-teal {
+	background-color: var(--light-teal);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text-light-teal {
+	color: var(--light-teal);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.border-light-teal {
+	border-color: var(--light-teal);
 }
 
-.card {
-  padding: 2em;
+.shadow-light-teal {
+	box-shadow: 0 4px 6px -1px rgba(118, 215, 184, 0.3),
+		0 2px 4px -2px rgba(118, 215, 184, 0.3);
 }
 
-.read-the-docs {
-  color: #888;
+.hover\:bg-light-teal:hover {
+	background-color: var(--light-teal);
+}
+
+.hover\:text-light-teal:hover {
+	color: var(--light-teal);
+}
+
+/* Medium Teal */
+.bg-medium-teal {
+	background-color: var(--medium-teal);
+}
+
+.text-medium-teal {
+	color: var(--medium-teal);
+}
+
+.border-medium-teal {
+	border-color: var(--medium-teal);
+}
+
+.shadow-medium-teal {
+	box-shadow: 0 4px 6px -1px rgba(52, 179, 138, 0.3),
+		0 2px 4px -2px rgba(52, 179, 138, 0.3);
+}
+
+.hover\:bg-medium-teal:hover {
+	background-color: var(--medium-teal);
+}
+
+.hover\:text-medium-teal:hover {
+	color: var(--medium-teal);
+}
+
+/* Teal Main */
+.bg-main-teal {
+	background-color: var(--main-teal);
+}
+
+.text-main-teal {
+	color: var(--main-teal);
+}
+
+.border-main-teal {
+	border-color: var(--main-teal);
+}
+
+.shadow-main-teal {
+	box-shadow: 0 4px 6px -1px rgba(78, 204, 163, 0.3),
+		0 2px 4px -2px rgba(78, 204, 163, 0.3);
+}
+
+.hover\:bg-main-teal:hover {
+	background-color: var(--main-teal);
+}
+
+.hover\:text-main-teal:hover {
+	color: var(--main-teal);
+}
+
+/* Medium Gray */
+.bg-medium-gray {
+	background-color: var(--medium-gray);
+}
+
+.text-medium-gray {
+	color: var(--medium-gray);
+}
+
+.border-medium-gray {
+	border-color: var(--medium-gray);
+}
+
+.shadow-medium-gray {
+	box-shadow: 0 4px 6px -1px rgba(80, 87, 98, 0.3),
+		0 2px 4px -2px rgba(80, 87, 98, 0.3);
+}
+
+.hover\:bg-medium-gray:hover {
+	background-color: var(--medium-gray);
+}
+
+.hover\:text-medium-gray:hover {
+	color: var(--medium-gray);
+}
+
+/* Dark Gray */
+.bg-dark-gray {
+	background-color: var(--dark-gray);
+}
+
+.text-dark-gray {
+	color: var(--dark-gray);
+}
+
+.border-dark-gray {
+	border-color: var(--dark-gray);
+}
+
+.shadow-dark-gray {
+	box-shadow: 0 4px 6px -1px rgba(57, 62, 70, 0.3),
+		0 2px 4px -2px rgba(57, 62, 70, 0.3);
+}
+
+.hover\:bg-dark-gray:hover {
+	background-color: var(--dark-gray);
+}
+
+.hover\:text-dark-gray:hover {
+	color: var(--dark-gray);
+}
+
+/* Gradient utilities */
+.from-light-teal {
+	background-image: linear-gradient(
+		to right,
+		var(--light-teal),
+		transparent
+	);
+}
+.to-light-teal {
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--light-teal)
+	);
+}
+
+.from-medium-teal {
+	background-image: linear-gradient(
+		to right,
+		var(--medium-teal),
+		transparent
+	);
+}
+.to-medium-teal {
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--medium-teal)
+	);
+}
+
+.from-main-teal {
+	background-image: linear-gradient(to right, var(--main-teal), transparent);
+}
+.to-main-teal {
+	background-image: linear-gradient(to right, transparent, var(--main-teal));
+}
+
+.from-medium-gray {
+	background-image: linear-gradient(
+		to right,
+		var(--medium-gray),
+		transparent
+	);
+}
+.to-medium-gray {
+	background-image: linear-gradient(
+		to right,
+		transparent,
+		var(--medium-gray)
+	);
+}
+
+.from-dark-gray {
+	background-image: linear-gradient(to right, var(--dark-gray), transparent);
+}
+.to-dark-gray {
+	background-image: linear-gradient(to right, transparent, var(--dark-gray));
 }
